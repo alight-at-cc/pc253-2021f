@@ -57,4 +57,6 @@ popt, pcov = curve_fit(rising_sine_function, years, CO2_ppm_MaunaLoa)
 print("Freq: {:.2f}, period: {:.2f}".format(popt[1], 1./popt[1]))
 
 plt.plot(years, rising_sine_function(years, *popt), 'r')
+
+plt.savefig("quiz1_plot_sine.png", bbox_inches='tight')
     
