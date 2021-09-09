@@ -6,6 +6,7 @@ Quiz #1 and its extensions.
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 
 CO2_ppm_MaunaLoa = np.load("Mauna_CO2.npy")
 
@@ -27,3 +28,33 @@ plt.errorbar(years, fit_func(years), yerr=np.sqrt(cov[0,0]), errorevery=10)
 plt.xlabel("Year")
 plt.ylabel("$CO_2$ Concentration (ppm)")
 plt.title("Mauna Loa $CO_2$ concentration increases at {:.2f} ppm/yr".format(fit[0]))
+
+def rising_sine_function(x, amplitude, freq, phase_shift, slope, intercept):
+    """
+    Function to create sine superimposed on line from x data.
+
+    Parameters
+    ----------
+    x : numpy array
+        x-axis data for which we want to evaluate function
+    slope : TYPE
+        DESCRIPTION.
+    intercept : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    y : TYPE
+        DESCRIPTION.
+
+    """
+    
+    y = amplitude*np.sin(2*np.pi*freq*x + phase_shift) + slope*x + intercept
+    
+    return y
+    
+popt, pcov = curve_fit(rising_sine_function, years, CO2_ppm_MaunaLoa)
+print("Freq: {:.2f}, period: {:.2f}".format(popt[1], 1./popt[1]))
+
+plt.plot(years, rising_sine_function(years, *popt), 'r')
+    
